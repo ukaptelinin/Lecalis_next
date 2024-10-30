@@ -9,6 +9,7 @@ import quizItems, {
 } from '../../QuizStateContextProvider/initialItems';
 import { QuizStateContext } from '../../QuizStateContextProvider/context';
 import FormDataToHTML from './FormDataToHTML';
+import axios from 'axios';
 
 const QuizDialog: FC<{ open: boolean; cancel: () => void }> = ({
   open,
@@ -59,20 +60,43 @@ const QuizDialog: FC<{ open: boolean; cancel: () => void }> = ({
   });
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    const htmlData: string = FormDataToHTML(data, quizItems, 'Заявка с квиза');
-    const response = await fetch('/api/send-email', {
-      // C:\Users\yuri-laptop\OneDrive\Desktop\programe\lecalis_next\src\pages\api\send-email.ts
+    const to: string = 'kaptelinin1964.1@yandex.ru';
+    const subject: string = 'Заявка с сайта';
+    const htmlContent: string = FormDataToHTML(
+      data,
+      quizItems,
+      'Заявка с квиза',
+    );
+
+    try {
+      const response = await axios.post('/api/send-email', {
+        to,
+        subject,
+        htmlContent,
+      });
+
+      console.log(response.data);
+      alert('Email sent successfully');
+    } catch (error) {
+      console.error(error);
+      alert('Failed to send email');
+    }
+    /*const response = await fetch('/api/send-email', {
       method: 'POST',
       headers: {
         'Content-Type': 'text/html',
       },
-      body: htmlData,
+      body: JSON.stringify({
+        subject: 'Заявка с сайта',
+        htmlContent: { htmlData },
+      }),
     });
+    console.log(response.body);
     if (response.ok) {
       alert('Email sent successfully!');
     } else {
       alert('Failed to send email.');
-    }
+    }*/
     cancel();
     handleReset();
   };
