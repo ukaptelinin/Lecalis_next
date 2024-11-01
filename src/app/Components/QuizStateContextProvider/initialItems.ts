@@ -40,7 +40,7 @@ export interface IFormInput {
   radioButtons6: {
     options: string;
   };
-  textFields: {
+  textFields1: {
     name: string;
     phone: string;
     email: string;
@@ -48,9 +48,9 @@ export interface IFormInput {
 }
 
 export interface ConsultFormInput {
-  personalInfo: {
-    firstName: string;
-    phone: string;
+  userFields: {
+    userName: string;
+    userPhone: string;
   };
 }
 

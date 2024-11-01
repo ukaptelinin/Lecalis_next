@@ -51,7 +51,7 @@ const QuizDialog: FC<{ open: boolean; cancel: () => void }> = ({
       radioButtons6: {
         options: '',
       },
-      textFields: {
+      textFields1: {
         name: '',
         phone: '',
         email: '',
@@ -81,22 +81,7 @@ const QuizDialog: FC<{ open: boolean; cancel: () => void }> = ({
       console.error(error);
       alert('Failed to send email');
     }
-    /*const response = await fetch('/api/send-email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'text/html',
-      },
-      body: JSON.stringify({
-        subject: 'Заявка с сайта',
-        htmlContent: { htmlData },
-      }),
-    });
-    console.log(response.body);
-    if (response.ok) {
-      alert('Email sent successfully!');
-    } else {
-      alert('Failed to send email.');
-    }*/
+
     cancel();
     handleReset();
   };

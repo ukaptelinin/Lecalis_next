@@ -20,6 +20,16 @@ const QuizBody: FC = () => {
 
   const { reset } = useFormContext();
 
+  const prevHandler = () => {
+    handlePrev();
+    slideToPrevItem();
+  };
+
+  const nextHandler = () => {
+    handleNext();
+    slideToNextItem();
+  };
+
   useEffect(() => {
     if (!open) {
       reset();
@@ -72,12 +82,29 @@ const QuizBody: FC = () => {
     >
       {carouselFragment}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-        <Button variant="contained" onClick={slideToPrevItem}>
-          Назад
-        </Button>
-        <Button variant="contained" onClick={slideToNextItem}>
-          Вперед
-        </Button>
+        <Box>
+          <Button
+            variant="contained"
+            sx={{
+              display: currentPage == 0 ? 'none' : 'inline-flex',
+            }}
+            onClick={prevHandler}
+          >
+            Назад
+          </Button>
+        </Box>
+        <Box>
+          <Button
+            variant="contained"
+            sx={{
+              display:
+                currentPage == quizItems.length - 1 ? 'none' : 'inline-flex',
+            }}
+            onClick={nextHandler}
+          >
+            Вперед
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

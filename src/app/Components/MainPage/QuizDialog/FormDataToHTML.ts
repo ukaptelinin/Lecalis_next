@@ -11,7 +11,7 @@ type RadioButtonFields =
   | 'radioButtons4'
   | 'radioButtons5'
   | 'radioButtons6';
-//type TextFields = 'textFields';
+type TextFields = 'textFields1';
 
 function iterateCheckBoxes<T extends Record<string, boolean>>(
   obj: T,
@@ -72,7 +72,8 @@ const FormDataToHTML = (
         break;
       }
       case 'TEXT': {
-        iterateTextFields(formData.textFields, (key, value) => {
+        const textFieldName = `textFields${item.partitionKey}` as TextFields;
+        iterateTextFields(formData[textFieldName], (key, value) => {
           HtmlContent = HtmlContent.concat(
             `<p>${item.mapLabels.get(key)}: ${value} </p>`,
           );
