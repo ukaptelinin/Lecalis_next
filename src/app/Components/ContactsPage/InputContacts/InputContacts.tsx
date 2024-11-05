@@ -1,10 +1,29 @@
-import type { FC } from 'react';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { useContext, type FC } from 'react';
+import {
+  Backdrop,
+  Box,
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { ConsultFormInput } from '../../QuizStateContextProvider/initialItems';
 import axios from 'axios';
+import SendMailMessage from '../../SendMailMessage/SendMailMessage';
+import { QuizStateContext } from '../../QuizStateContextProvider/context';
 
 const InputContacts: FC = () => {
+  const {
+    openMailMessage,
+    succesMessage,
+    errorMessage,
+    startLoading,
+    stopLoading,
+    dialogMessage,
+    loading,
+  } = useContext(QuizStateContext);
+
   const { handleSubmit, control, reset } = useForm<ConsultFormInput>({
     defaultValues: {
       userFields: {
@@ -17,8 +36,8 @@ const InputContacts: FC = () => {
     console.log(data);
     const to: string = 'kaptelinin1964.1@yandex.ru';
     const subject: string = 'Заявка с сайта';
-    const htmlContent: string = `<html><body><h4>Заявка на консультацию</h4><p>Имя: ${data.userFields.userName}</p><p>Телефон: ${data.userFields.userPhone}</p></body></html>`;
-
+    const htmlContent: string = `<html><body><h2>Заявка на консультацию</h2><p>Имя: ${data.userFields.userName}</p><p>Телефон: ${data.userFields.userPhone}</p></body></html>`;
+    startLoading();
     try {
       const response = await axios.post('/api/send-email', {
         to,
@@ -27,12 +46,17 @@ const InputContacts: FC = () => {
       });
 
       console.log(response.data);
-      alert('Email sent successfully');
+      stopLoading();
+      succesMessage();
+      openMailMessage();
+      reset();
     } catch (error) {
+      stopLoading();
+      errorMessage();
+      openMailMessage();
       console.error(error);
-      alert('Failed to send email');
+      reset();
     }
-    reset();
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -69,6 +93,13 @@ const InputContacts: FC = () => {
           Submit
         </Button>
       </Box>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <SendMailMessage text={dialogMessage} />
     </form>
   );
 };

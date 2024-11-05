@@ -36,9 +36,9 @@ const FormDataToHTML = (
   quizItems: QuizItem[],
   HtmlTitle: string,
 ): string => {
-  let HtmlContent = `<html><body><h4>${HtmlTitle}</h4>`;
+  let HtmlContent = `<html><body><h2>${HtmlTitle}</h2>`;
   quizItems.forEach((item) => {
-    HtmlContent = HtmlContent.concat(`<h5>${item.title}</h5>`);
+    HtmlContent = HtmlContent.concat(`<h3>${item.title}</h3>`);
 
     switch (item.pageType) {
       case 'CHECKBOX': {

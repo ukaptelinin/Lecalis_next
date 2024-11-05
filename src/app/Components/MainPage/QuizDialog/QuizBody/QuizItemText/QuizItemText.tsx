@@ -15,7 +15,7 @@ const QuizItemText: FC<{ index: number }> = ({ index }) => {
         justifyContent: 'center',
       }}
     >
-      <QuizItemTextList currentMap={quizItems[index].mapLabels} />
+      <QuizItemTextList index={index} currentMap={quizItems[index].mapLabels} />
 
       <Button
         type="submit"

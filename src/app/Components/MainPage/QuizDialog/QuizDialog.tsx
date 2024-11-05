@@ -3,19 +3,29 @@ import DialogContent from '@mui/material/DialogContent';
 import { FC, useContext } from 'react';
 import QuizBody from './QuizBody/QuizBody';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { Box } from '@mui/material';
+import { Backdrop, Box, CircularProgress } from '@mui/material';
 import quizItems, {
   IFormInput,
 } from '../../QuizStateContextProvider/initialItems';
 import { QuizStateContext } from '../../QuizStateContextProvider/context';
 import FormDataToHTML from './FormDataToHTML';
 import axios from 'axios';
+import SendMailMessage from '../../SendMailMessage/SendMailMessage';
 
 const QuizDialog: FC<{ open: boolean; cancel: () => void }> = ({
   open,
   cancel,
 }) => {
-  const { handleReset } = useContext(QuizStateContext);
+  const {
+    handleReset,
+    openMailMessage,
+    succesMessage,
+    errorMessage,
+    startLoading,
+    stopLoading,
+    dialogMessage,
+    loading,
+  } = useContext(QuizStateContext);
   const methods = useForm<IFormInput>({
     defaultValues: {
       checkBoxes1: {
@@ -67,6 +77,8 @@ const QuizDialog: FC<{ open: boolean; cancel: () => void }> = ({
       quizItems,
       'Заявка с квиза',
     );
+    cancel();
+    startLoading();
 
     try {
       const response = await axios.post('/api/send-email', {
@@ -76,36 +88,48 @@ const QuizDialog: FC<{ open: boolean; cancel: () => void }> = ({
       });
 
       console.log(response.data);
-      alert('Email sent successfully');
+      stopLoading();
+      succesMessage();
+      openMailMessage();
     } catch (error) {
+      stopLoading();
+      errorMessage();
+      openMailMessage();
       console.error(error);
-      alert('Failed to send email');
     }
 
-    cancel();
     handleReset();
   };
 
   return (
-    <Dialog open={open} onClose={cancel}>
-      <DialogContent>
-        <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
-            <Box
-              sx={{
-                overflowX: 'hidden',
-                width: 550,
-                height: 350,
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <QuizBody />
-            </Box>
-          </form>
-        </FormProvider>
-      </DialogContent>
-    </Dialog>
+    <>
+      <Dialog open={open} onClose={cancel}>
+        <DialogContent>
+          <FormProvider {...methods}>
+            <form onSubmit={methods.handleSubmit(onSubmit)}>
+              <Box
+                sx={{
+                  overflowX: 'hidden',
+                  width: 550,
+                  height: 350,
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <QuizBody />
+              </Box>
+            </form>
+          </FormProvider>
+        </DialogContent>
+      </Dialog>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <SendMailMessage text={dialogMessage} />
+    </>
   );
 };
 

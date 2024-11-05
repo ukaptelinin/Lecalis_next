@@ -12,6 +12,11 @@ export default function RootLayout({
           href="src/app/assets/favico.png"
         />
         <title>Legalis</title>
+        <style>{`
+          html {
+            scroll-behavior: smooth;
+          }
+        `}</style>
       </head>
       <body>
         <div id="root">{children}</div>
