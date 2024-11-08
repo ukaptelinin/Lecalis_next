@@ -1,20 +1,20 @@
 import type { FC } from 'react';
 import { Box, Typography } from '@mui/material';
 import CustomizedAccordions from '../Accordion/Accordion';
+import React from 'react';
 
 const QuestionsPage: FC = () => (
-  <>
+  <React.Fragment>
     <Box
-      id="questions"
       sx={{
-        position: 'absolute',
-        top: -120,
-        height: 120,
+        top: -25,
+        height: 25,
         width: 1,
-        visibility: 'hidden',
       }}
+      id="questions"
     />
     <Box
+      component="section"
       sx={{
         flexGrow: 1,
         maxWidth: '100%',
@@ -28,7 +28,7 @@ const QuestionsPage: FC = () => (
       </Typography>
       <CustomizedAccordions />
     </Box>
-  </>
+  </React.Fragment>
 );
 
 export default QuestionsPage;
