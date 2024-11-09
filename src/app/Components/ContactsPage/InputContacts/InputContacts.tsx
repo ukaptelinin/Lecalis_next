@@ -24,6 +24,22 @@ const InputContacts: FC = () => {
     loading,
   } = useContext(QuizStateContext);
 
+  const getPhoneValidationRules = () => {
+    return {
+      required: 'Не верный номер',
+      pattern: {
+        value: /^\+7\d{10}$/,
+        message: 'Введите номер в формате: +79287778899',
+      },
+    };
+  };
+
+  const getNameValidationRules = () => {
+    return {
+      required: 'Не введено имя',
+    };
+  };
+
   const { handleSubmit, control, reset } = useForm<ConsultFormInput>({
     defaultValues: {
       userFields: {
@@ -72,16 +88,31 @@ const InputContacts: FC = () => {
         <Controller
           name="userFields.userName"
           control={control}
-          render={({ field }) => (
-            <TextField {...field} variant="outlined" size="medium" />
+          rules={getNameValidationRules()}
+          render={({ field, fieldState }) => (
+            <TextField
+              {...field}
+              variant="outlined"
+              size="medium"
+              error={!!fieldState.error}
+              helperText={fieldState.error ? fieldState.error.message : null}
+            />
           )}
         />
         <Typography variant="h6">Номер телефона</Typography>
         <Controller
           name="userFields.userPhone"
           control={control}
-          render={({ field }) => (
-            <TextField {...field} variant="outlined" size="medium" />
+          rules={getPhoneValidationRules()}
+          render={({ field, fieldState }) => (
+            <TextField
+              {...field}
+              placeholder="+79998887766"
+              variant="outlined"
+              size="medium"
+              error={!!fieldState.error}
+              helperText={fieldState.error ? fieldState.error.message : null}
+            />
           )}
         />
         <Button
